@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nine/pages/game/AnimatedGameTile.dart';
 import 'package:nine/pages/game/GameList.dart';
 import 'package:nine/pages/game/GameTile.dart';
 
@@ -17,26 +18,36 @@ class GameMainTiles extends StatelessWidget {
         for (var i = 0; i < N; i++)
           new Row(
             children: <Widget>[
-              for (var j = 0; j < N; j++)
-                new GameTile(
-                  length: (fieldLength / N) * 0.88,
-                  backgroundColor: bgColorOf(
-                    gameState.gameState[gameState.indexOf(i, j)],
-                  ),
-                  value: gameState.gameState[gameState.indexOf(i, j)],
-                  onSelect: () => {
-                    onSelect(i, j),
-                  },
-                  foregroundColor: fgColorOf(
-                    gameState.gameState[gameState.indexOf(i, j)],
-                  ),
-                )
+              for (var j = 0; j < N; j++) customGameTile(i, j),
             ],
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           )
       ],
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
     );
+  }
+
+  Widget customGameTile(int i, int j) {
+    var index = gameState.indexOf(i, j);
+    var value = gameState.gameState[index];
+    var gT = new GameTile(
+      length: (fieldLength / N) * 0.88,
+      backgroundColor: bgColorOf(
+        value
+      ),
+      foregroundColor: fgColorOf(
+        value
+      ),
+      value: value,
+      onSelect: () => {
+        onSelect(i, j),
+      },
+    );
+
+    if (gameState.newValue == index) {
+      return new AnimatedGameTile(wrappedGameTile: gT);
+    }
+    return gT;
   }
 
   Color bgColorOf(int value) {
