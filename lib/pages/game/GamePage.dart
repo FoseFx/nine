@@ -26,7 +26,7 @@ class _GamePageState extends State<GamePage> {
                 highScore: this._highScore,
               ),
               new GameControlls(
-                onOneBack: _field.oneBackInHistory,
+                onOneBack: () => {setState(() {_field.state.move(3, 0, 2, 2);})},//_field.oneBackInHistory,
                 onReset: this._onReset,
               ),
               _field,

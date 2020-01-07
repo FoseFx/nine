@@ -9,41 +9,52 @@
  */
 
 import 'dart:collection';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 
+const int seed = 4;
+
 class GameList {
+  final Random random = new Random(seed);
   final int N;
   final List<int> gameState; // see first comment in file
   final Queue<List<int>> taskQueue = new Queue();
+
+  int newValue; // indicates the index of the newest value
 
   GameList(this.N) : gameState = _generateInitialState(N);
 
   /// Returns whether move is legal and executed
   bool move(int fromRow, int fromColumn, int toRow, int toColumn) {
-    var fromIndex = _indexOf(fromRow, fromColumn);
-    var toIndex = _indexOf(toRow, toColumn);
+    var fromIndex = indexOf(fromRow, fromColumn);
+    var toIndex = indexOf(toRow, toColumn);
+    debugPrint("[NINE][GAME LIST] move() fromIndex " + fromIndex.toString());
+    debugPrint("[NINE][GAME LIST] move() toIndex " + toIndex.toString());
+    debugPrint("[NINE][GAME LIST] move() gameState " + gameState.toString());
 
-    if (gameState[fromIndex] != gameState[toIndex]) {
+    if (fromIndex == toIndex) {
+      return false;
+    }
+
+    if (gameState[fromIndex] != gameState[toIndex] && gameState[toIndex] != null) {
       return false;
     }
 
     var res = _bfs(fromIndex, toIndex);
-    debugPrint("[NINE] [GAME LIST] [move()] res: " + res.toString());
+    debugPrint("[NINE] [GAME LIST] [move()] res: " + res.isConnected.toString());
     if (!res.isConnected) {
       return false;
     }
 
-    int prevIndex;
-    for (int index in res.path) {
-      if (prevIndex == null) {
-        prevIndex = index;
-        continue;
-      }
-      taskQueue.add([prevIndex, index]);
-      gameState[fromIndex] = 0;
+    taskQueue.add(res.path);
+    if (gameState[toIndex] == null) {
+      gameState[toIndex] = gameState[fromIndex];
+    } else {
       gameState[toIndex]++;
     }
+    gameState[fromIndex] = null;
+    _addNewTile();
     return true;
   }
 
@@ -51,10 +62,11 @@ class GameList {
   BFSResult _bfs(int a, int b) {
     Queue q = new Queue();
     HashSet<int> visited = new HashSet();
-    HashMap<int, int> visited_by = new HashMap();
+    HashMap<int, int> visitedBy = new HashMap();
 
+    q.add(a);
     visited.add(a);
-    visited_by.putIfAbsent(a, () => a);
+    visitedBy.putIfAbsent(a, () => a);
 
     while (q.isNotEmpty) {
       int thisIndex = q.removeFirst();
@@ -66,25 +78,25 @@ class GameList {
         if (!visited.contains(neighbour)) {
           q.add(neighbour);
           visited.add(neighbour);
-          visited_by.putIfAbsent(neighbour, () => thisIndex);
+          visitedBy.putIfAbsent(neighbour, () => thisIndex);
         }
       }
     }
-    List<int> path = null;
+    List<int> path;
     var isConnected = visited.contains(b);
     if (isConnected) {
       List<int> history = new List();
       history.add(b);
 
-      var current = visited_by.remove(b);
+      var current = visitedBy.remove(b);
       while (current != null) {
         history.add(current);
-        current = visited_by.remove(current);
+        current = visitedBy.remove(current);
       }
 
       history.add(a);
 
-      path = new List(history.length);
+      path = new List();
       for (var index in history.reversed) {
         path.add(index);
       }
@@ -130,12 +142,39 @@ class GameList {
   }
 
   /// 0-indexed
-  int _indexOf(int row, int column) {
+  int indexOf(int row, int column) {
     return row * N + column;
   }
 
+  void _addNewTile() {
+    List<int> list = _unusedIndexes(gameState);
+    int randomIndex = random.nextInt(list.length);
+    int index = list[randomIndex];
+    gameState[index] = 1;
+    newValue = index;
+  }
+
   static List<int> _generateInitialState(int N) {
-    return new List(N * N);
+    Random random = new Random(seed);
+    int nsq = N*N;
+    List<int> l = new List(nsq);
+    int index1 = random.nextInt(nsq);
+    int index2 = random.nextInt(nsq);
+    int index3 = random.nextInt(nsq);
+    l[index1] = 1;
+    l[index2] = 1;
+    l[index3] = 2;
+    return l;
+  }
+
+  static List<int> _unusedIndexes(List<int> list) {
+    List<int> newlist = new List<int>();
+    for (int i = 0; i < list.length; i++) {
+      if (list[i] == null) {
+        newlist.add(i);
+      }
+    }
+    return newlist;
   }
 }
 
