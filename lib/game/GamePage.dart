@@ -4,14 +4,15 @@ import 'package:nine/game/GameState.dart';
 import 'package:provider/provider.dart';
 
 class GamePage extends StatelessWidget {
-  const GamePage({Key key}) : super(key: key);
+  final int N = 5;
 
   @override
   Widget build(BuildContext context) {
     return new ChangeNotifierProvider<GameState>(
-      create: (_) => new GameState(),
+      create: (_) => new GameState(N),
+      lazy: false,
       child: new Scaffold(
-        body: new GameField(),
+        body: new GameField(N),
       ),
     );
   }
