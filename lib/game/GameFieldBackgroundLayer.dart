@@ -9,12 +9,15 @@ class GameFieldBackgroundLayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Stack(
-      children: <Widget>[
-        for (int r = 0; r < N; r++)
-          for (int c = 0; c < N; c++)
-            new GameTile(r, c, getLength(context, padding, N), -1)
-      ],
+    return IgnorePointer(
+      ignoring: true,
+      child: new Stack(
+        children: <Widget>[
+          for (int r = 0; r < N; r++)
+            for (int c = 0; c < N; c++)
+              new GameTile(r, c, getLength(context, padding, N), -1)
+        ],
+      ),
     );
   }
 }

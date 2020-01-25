@@ -15,14 +15,23 @@ class GameFieldMainLayer extends StatelessWidget {
     return new Stack(
       children: <Widget>[
         for (int i = 0; i < gameState.tileState.length; i++)
-          _gameTile(i,gameState.tileState[i]),
+          _gameTile(gameState, i),
       ],
     );
   }
 
-  Widget _gameTile(int index, int value) {
+  Widget _gameTile(GameState gameState, int index) {
     List<int> rowAndColumn = indexToRowAndColumn(index, N);
-    print("index: " + index.toString() + " row: " + rowAndColumn[0].toString() + " column: " + rowAndColumn[1].toString() + " value: " + value.toString());
-    return new GameTile(rowAndColumn[0], rowAndColumn[1], len, value);
+    int row = rowAndColumn[0];
+    int column = rowAndColumn[1];
+    int value = gameState.tileState[index];
+
+    return new GameTile(
+      row,
+      column,
+      len,
+      value,
+      onTapFn: () => gameState.onTileTab(index),
+    );
   }
 }

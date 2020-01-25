@@ -9,7 +9,7 @@ double getLength(BuildContext context, double padding, int N) {
 List<int> freeIndecies(List<int> state) {
   List<int> list = new List();
   for (int i = 0; i < state.length; i++) {
-    if (state[i] == 0) {
+    if (state[i] == 0 || state[i] == null) {
       list.add(i);
     }
   }
