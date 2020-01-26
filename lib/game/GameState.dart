@@ -11,6 +11,13 @@ class GameState with ChangeNotifier {
 
   GameState(this.N) : tileState = initState(N);
 
+  reset() {
+    gameStatus = GameStatus.running;
+    tileState = initState(N);
+    selectedIndex = null;
+    notifyListeners();
+  }
+
   onTileTab(int index) {
     if (selectedIndex == null && tileState[index] != null) {
       selectedIndex = index;
@@ -38,7 +45,28 @@ class GameState with ChangeNotifier {
   }
 
   _tryMerge(int fromIndex, int toIndex) {
-    // TODO
+    var val1 = tileState[fromIndex];
+    var val2 = tileState[toIndex];
+    bool valsAreEqual = val1 == val2;
+    bool val2IsNull = val2 == null || val2 == 0;
+    if (!valsAreEqual && !val2IsNull) {
+      return;
+    }
+    var bfsResult = breadthFirstSearch(tileState, N, fromIndex, toIndex);
+    if (!bfsResult.isConnected) {
+      return;
+    }
+    if (valsAreEqual) {
+      tileState[toIndex]++;
+      tileState[fromIndex] = null;
+      selectedIndex = null;
+      _addTile();
+    } else if (val2IsNull) {
+      tileState[toIndex] = tileState[fromIndex];
+      tileState[fromIndex] = null;
+      selectedIndex = null;
+      _addTile();
+    }
   }
 }
 

@@ -4,7 +4,7 @@ import 'package:nine/game/GameState.dart';
 import 'package:provider/provider.dart';
 
 class GamePage extends StatelessWidget {
-  final int N = 5;
+  final int N = 3;
 
   @override
   Widget build(BuildContext context) {
