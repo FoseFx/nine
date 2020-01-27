@@ -72,6 +72,13 @@ const _BG_COLORS = {
   0: Colors.transparent,
   1: Colors.green,
   2: Colors.blue,
+  3: Colors.amber,
+  4: Colors.cyan,
+  5: Colors.deepPurple,
+  6: Colors.indigo,
+  7: Colors.lime,
+  8: Colors.purple,
+  9: Colors.yellow,
 };
 
 const _FG_COLORS = {
@@ -80,4 +87,11 @@ const _FG_COLORS = {
   0: Colors.transparent,
   1: Colors.white,
   2: Colors.white,
+  3: Colors.black,
+  4: Colors.black,
+  5: Colors.white,
+  6: Colors.white,
+  7: Colors.black,
+  8: Colors.white,
+  9: Colors.black,
 };

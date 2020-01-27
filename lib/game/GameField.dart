@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nine/game/GameFieldBackgroundLayer.dart';
 import 'package:nine/game/GameFieldMainLayer.dart';
 import 'package:nine/game/GameFieldSelectedLayer.dart';
+import 'package:nine/game/GameOverLayer.dart';
 import 'package:nine/game/GameUtils.dart';
 import 'package:provider/provider.dart';
 
@@ -23,6 +24,11 @@ class GameField extends StatelessWidget {
           new GameFieldBackgroundLayer(N, padd),
           new GameFieldMainLayer(N, _getLength(context)),
           new GameFieldSelectedLayer(N, _getLength(context)),
+          new GameOverLayer(
+            N,
+            _getLength(context),
+            gameState.gameStatus == GameStatus.over,
+          ),
           new Text("SelectedIndex: " + gameState.selectedIndex.toString()),
         ],
       ),

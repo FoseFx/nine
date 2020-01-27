@@ -97,6 +97,24 @@ BFSResult breadthFirstSearch(List<int> state, int N, int from, int to) {
 /// allowedIndex is will not be excluded if found
 List<int> _tilesMovableNeighbours(
     List<int> state, int N, int index, int allowedIndex) {
+
+  var possible = _tilesPossibleNeighbours(state, N, index);
+  List<int> list = new List();
+  for (var index in possible) {
+    if (index == allowedIndex) {
+      list.add(index);
+      continue;
+    }
+    var val = state[index];
+    if (val == null || val == 0) {
+      list.add(index);
+    }
+  }
+  return list;
+}
+
+
+List<int> _tilesPossibleNeighbours(List<int> state, int N, int index) {
   var isAtLeftBorder = index % N == 0;
   var isAtRightBorder = (index + 1) % N == 0;
   var isAtTopBorder = index - N < 0;
@@ -116,16 +134,21 @@ List<int> _tilesMovableNeighbours(
     possible.add(index + N);
   }
 
-  List<int> list = new List();
-  for (var index in possible) {
-    if (index == allowedIndex) {
-      list.add(index);
-      continue;
-    }
-    var val = state[index];
-    if (val == null || val == 0) {
-      list.add(index);
+  return possible;
+}
+
+// TODO: There is a lot of potential to optimize
+// And should probably be done, as this is in a hot path
+bool isGameOver(List<int> state, int N) {
+  for (int i = 0; i < state.length; i++) {
+    var toCompare = state[i];
+    var possibleMoves = _tilesPossibleNeighbours(state, N, i);
+    for (var index in possibleMoves) {
+      var val = state[index];
+      if (val == toCompare || val == null || val == 0) {
+        return false;
+      }
     }
   }
-  return list;
+  return true;
 }

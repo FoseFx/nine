@@ -19,6 +19,9 @@ class GameState with ChangeNotifier {
   }
 
   onTileTab(int index) {
+    if (gameStatus == GameStatus.over) {
+      return;
+    }
     if (selectedIndex == null && tileState[index] != null) {
       selectedIndex = index;
       notifyListeners();
@@ -41,6 +44,10 @@ class GameState with ChangeNotifier {
     var indexToIndex = random.nextInt(indecies.length);
     var index = indecies[indexToIndex];
     tileState[index] = 1;
+
+    if (isGameOver(tileState, N)) {
+      gameStatus = GameStatus.over;
+    }
     notifyListeners();
   }
 
