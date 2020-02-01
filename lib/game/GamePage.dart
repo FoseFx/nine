@@ -12,7 +12,14 @@ class GamePage extends StatelessWidget {
       create: (_) => new GameState(N),
       lazy: false,
       child: new Scaffold(
-        body: new GameField(N),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Center(
+              child: new GameField(N),
+            ),
+          ],
+        ),
       ),
     );
   }

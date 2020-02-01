@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 double getLength(BuildContext context, double padding, int N) {
   var size = MediaQuery.of(context).size;
-  return (min(size.width, size.height) - (2 * padding)) / N;
+  return (min(min(size.width, size.height), 500.0) - (2 * padding)) / N;
 }
 
 List<int> freeIndecies(List<int> state) {
@@ -97,7 +97,6 @@ BFSResult breadthFirstSearch(List<int> state, int N, int from, int to) {
 /// allowedIndex is will not be excluded if found
 List<int> _tilesMovableNeighbours(
     List<int> state, int N, int index, int allowedIndex) {
-
   var possible = _tilesPossibleNeighbours(state, N, index);
   List<int> list = new List();
   for (var index in possible) {
@@ -112,7 +111,6 @@ List<int> _tilesMovableNeighbours(
   }
   return list;
 }
-
 
 List<int> _tilesPossibleNeighbours(List<int> state, int N, int index) {
   var isAtLeftBorder = index % N == 0;
